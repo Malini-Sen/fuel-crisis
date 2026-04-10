@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUEL CRISIS: THE CONTROL LOCKDOWN</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Share+Tech+Mono&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Share+Tech+Mono&family=Special+Elite&display=swap');
+
+:root {
+  --bg: #030202;
+  --surface: #0a0604;
+  --surface2: #110806;
+  --border: #2a0e06;
+  --border2: #4a1a08;
+  --text: #c97a52;
+  --text-dim: #6b3820;
+  --glow: #cc3300;
+  --bright: #ff4500;
+  --decay: #8b6914;
+  --decay-dim: #5a4210;
+  --wrong: #ff1a00;
+  --correct: #7ab800;
+  --blood: #8b0000;
+  --horror: 'Rubik Dirt', cursive;
+  --mono: 'Share Tech Mono', monospace;
+  --worn: 'Special Elite', cursive;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+/* Custom cursor */
+body { cursor: crosshair; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(100,10,0,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(80,5,0,0.15) 0%, transparent 60%);
+}
+
+/* CRT scanlines */
+body::before {
+  content:'';
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.18) 2px,
+    rgba(0,0,0,0.18) 3px
+  );
+  pointer-events:none;z-index:9999;
+}
+
+/* Noise grain overlay */
+body::after {
+  content:'';
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9998;opacity:0.55;
+}
+
+.wrap { max-width:820px;margin:0 auto;padding:20px 20px 60px; }
+
+.screen { display:none; }
+.screen.on { display:block; }
+
+/* ── INTRO ─────────────────────────────────── */
+#intro { text-align:center; padding:50px 20px 40px; }
+
+.bio-icon {
+  font-size:3.5rem;
+  display:inline-block;
+  animation:spin 12s linear infinite, pulse-red 2s ease-in-out infinite;
+  filter:drop-shadow(0 0 14px #cc0000) drop-shadow(0 0 30px #660000);
+  color:#cc2200;
+}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes pulse-red{0%,100%{filter:drop-shadow(0 0 8px #cc0000)}50%{filter:drop-shadow(0 0 28px #ff2200) drop-shadow(0 0 50px #880000)}}
+
+.main-title {
+  font-family:var(--horror);
+  font-size:clamp(2.4rem,8vw,5rem);
+  color:#ff2200;
+  letter-spacing:4px;
+  line-height:1.1;
+  margin:18px 0 6px;
+  animation:title-flicker 4s infinite;
+  text-shadow:
+    0 0 10px #ff2200,
+    0 0 30px #aa0000,
+    0 0 60px #550000,
+    3px 3px 0 #1a0000;
+}
+@keyframes title-flicker{
+  0%,88%,100%{opacity:1;text-shadow:0 0 10px #ff2200,0 0 30px #aa0000,0 0 60px #550000,3px 3px 0 #1a0000;}
+  89%{opacity:0.15;text-shadow:none;}
+  90%{opacity:0.85;}
+  91%{opacity:0.05;}
+  92%{opacity:1;text-shadow:0 0 10px #ff2200,0 0 40px #cc0000,0 0 80px #550000;}
+  93%{opacity:0.7;}
+}
+
+.main-sub {
+  font-family:var(--worn);
+  color:#7a3a10;
+  letter-spacing:8px;
+  font-size:0.92rem;
+  text-transform:uppercase;
+  margin-bottom:28px;
+  animation:sub-glitch 8s infinite;
+}
+@keyframes sub-glitch{
+  0%,94%,100%{transform:translateX(0);filter:none;}
+  95%{transform:translateX(-3px);filter:hue-rotate(90deg);}
+  96%{transform:translateX(3px);}
+  97%{transform:translateX(0);}
+}
+
+.divider {
+  border:none;
+  border-top:1px solid var(--border2);
+  margin:22px 0;
+  position:relative;
+}
+.divider::after {
+  content:'✕ ✕ ✕';
+  position:absolute;
+  top:-9px;left:50%;transform:translateX(-50%);
+  background:var(--bg);
+  padding:0 12px;
+  color:#4a1a08;
+  font-size:0.6rem;
+  letter-spacing:6px;
+}
+
+.intro-story {
+  font-family:var(--worn);
+  color:#7a4828;
+  max-width:560px;
+  margin:0 auto 24px;
+  line-height:1.9;
+  font-size:0.93rem;
+  text-align:left;
+  border-left:3px solid #5a0000;
+  padding:14px 18px;
+  background:rgba(40,0,0,0.35);
+  box-shadow:inset 0 0 30px rgba(100,0,0,0.1);
+}
+.intro-story p { margin-bottom:10px; }
+
+.wall-msg {
+  font-family:var(--horror);
+  font-size:1.4rem;
+  color:#cc2200;
+  text-shadow:0 0 18px rgba(200,30,0,0.5), 2px 2px 0 #1a0000;
+  margin:14px 0 8px;
+  animation:drip-flicker 3s ease-in-out infinite;
+}
+@keyframes drip-flicker{0%,100%{opacity:1}45%{opacity:0.9}50%{opacity:0.6}55%{opacity:1}}
+
+.wall-sub {
+  font-family:var(--worn);
+  color:#8a4a28;
+  font-size:0.95rem;
+  line-height:1.85;
+  margin-bottom:28px;
+}
+
+.btn-start {
+  background:transparent;
+  border:2px solid #cc2200;
+  color:#ff4422;
+  font-family:var(--mono);
+  font-size:0.95rem;
+  padding:14px 50px;
+  cursor:pointer;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  transition:all .25s;
+  text-shadow:0 0 8px rgba(255,50,0,0.4);
+  box-shadow:0 0 20px rgba(150,0,0,0.2), inset 0 0 20px rgba(100,0,0,0.1);
+  position:relative;
+  overflow:hidden;
+}
+.btn-start::before {
+  content:'';
+  position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(200,30,0,0.15),transparent);
+  transition:left .4s;
+}
+.btn-start:hover::before{left:100%;}
+.btn-start:hover{
+  background:rgba(150,20,0,0.2);
+  box-shadow:0 0 35px rgba(200,0,0,0.4), inset 0 0 20px rgba(150,0,0,0.2);
+  border-color:#ff2200;
+  color:#ff6633;
+  text-shadow:0 0 14px rgba(255,80,0,0.6);
+}
+
+/* ── HUD ─────────────────────────────────────── */
+#hud { display:none; margin-bottom:14px; }
+#hud.on { display:block; }
+
+.hud-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:12px;
+}
+.badge {
+  font-size:0.8rem;
+  letter-spacing:3px;
+  padding:5px 14px;
+  border:1px solid #5a1a00;
+  color:#cc4400;
+  text-transform:uppercase;
+  background:rgba(60,5,0,0.5);
+  animation:badge-pulse 3s ease-in-out infinite;
+}
+@keyframes badge-pulse{0%,100%{border-color:#5a1a00}50%{border-color:#8b2a00;box-shadow:0 0 8px rgba(150,30,0,0.3)}}
+
+/* Panel selector tabs */
+.panel-tabs {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-bottom:14px;
+}
+.ptab {
+  background:rgba(20,5,0,0.7);
+  border:1px solid #2a0e06;
+  color:#5a2a10;
+  font-family:var(--mono);
+  font-size:0.8rem;
+  padding:6px 12px;
+  cursor:pointer;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  transition:all .2s;
+  position:relative;
+}
+.ptab:hover { border-color:#882200; color:#cc4422; box-shadow:0 0 8px rgba(150,20,0,0.2); }
+.ptab.active {
+  border-color:#cc2200;
+  color:#ff4422;
+  background:rgba(100,10,0,0.25);
+  box-shadow:0 0 12px rgba(180,20,0,0.3);
+}
+.ptab.done {
+  border-color:#4a7000;
+  color:#7ab800;
+  background:rgba(30,50,0,0.2);
+}
+.ptab.done::after {
+  content:'✓';
+  margin-left:5px;
+  font-size:0.6rem;
+}
+
+/* Letters row */
+#letters-row{display:none;justify-content:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+#letters-row.on{display:flex;}
+.lbox {
+  width:46px;height:56px;
+  border:1px solid #2a0e06;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--horror);font-size:1.7rem;
+  color:#0a0604;
+  background:#0a0604;
+  transition:all .6s;
+  position:relative;
+  box-shadow:inset 0 0 8px rgba(0,0,0,0.8);
+}
+.lbox.lit {
+  border-color:#cc2200;
+  color:#ff4422;
+  background:rgba(100,10,0,0.2);
+  text-shadow:0 0 12px #cc2200, 0 0 24px #660000;
+  box-shadow:0 0 16px rgba(180,20,0,0.4), inset 0 0 10px rgba(100,0,0,0.2);
+  animation:letter-emerge .6s ease forwards;
+}
+@keyframes letter-emerge{
+  0%{transform:scale(1.4);opacity:0}
+  60%{transform:scale(0.95)}
+  100%{transform:scale(1);opacity:1}
+}
+.lbox-label {
+  position:absolute;
+  bottom:2px;
+  font-size:0.55rem;
+  letter-spacing:1px;
+  color:#4a1a08;
+  font-family:var(--mono);
+}
+
+/* ── PANEL CARD ─────────────────────────────── */
+.panel {
+  border:1px solid #2a0e06;
+  background:linear-gradient(160deg, #0d0603 0%, #0a0402 100%);
+  padding:28px 28px 24px;
+  margin-bottom:20px;
+  display:none;
+  position:relative;
+  animation:panel-slidein .4s ease;
+  box-shadow:0 4px 40px rgba(100,5,0,0.15), inset 0 0 60px rgba(0,0,0,0.4);
+}
+.panel.on{display:block;}
+@keyframes panel-slidein{from{opacity:0;transform:translateY(20px) skewX(-0.5deg)}to{opacity:1;transform:translateY(0) skewX(0)}}
+
+.panel::before {
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,#cc2200,#ff4422,#cc2200,transparent);
+  box-shadow:0 0 12px #aa1100;
+}
+.panel::after {
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#3a0e00,transparent);
+}
+
+/* Corner decorations */
+.panel-corner {
+  position:absolute;
+  width:14px;height:14px;
+  border-color:#4a1a08;
+  border-style:solid;
+  border-width:0;
+}
+.panel-corner.tl{top:6px;left:6px;border-top-width:1px;border-left-width:1px;}
+.panel-corner.tr{top:6px;right:6px;border-top-width:1px;border-right-width:1px;}
+.panel-corner.bl{bottom:6px;left:6px;border-bottom-width:1px;border-left-width:1px;}
+.panel-corner.br{bottom:6px;right:6px;border-bottom-width:1px;border-right-width:1px;}
+
+.pnum{font-size:0.82rem;letter-spacing:4px;color:#6a3820;text-transform:uppercase;margin-bottom:6px;}
+.ptitle{
+  font-family:var(--horror);
+  font-size:1.9rem;
+  color:#cc3300;
+  margin-bottom:18px;
+  text-shadow:0 0 16px rgba(180,40,0,0.4), 2px 2px 0 #1a0000;
+  line-height:1.15;
+}
+.pstory{
+  font-family:var(--worn);
+  color:#9a6040;
+  font-size:1rem;
+  line-height:1.9;
+  border-bottom:1px solid #1e0806;
+  padding-bottom:18px;
+  margin-bottom:20px;
+}
+.pstory em{color:#c97a52;}
+
+.puzzle-box {
+  background:rgba(0,0,0,0.5);
+  border:1px solid rgba(150,30,0,0.25);
+  border-left:3px solid #882200;
+  padding:18px 20px;
+  margin:0 0 14px;
+  box-shadow:inset 0 0 20px rgba(0,0,0,0.4);
+}
+.plabel{font-size:0.8rem;letter-spacing:3px;color:#cc3300;text-transform:uppercase;margin-bottom:12px;}
+.math-block{text-align:center;padding:10px 0;color:#c97a52;line-height:2.2;font-size:1rem;}
+.katex{color:#c97a52 !important;}
+.katex-display{overflow-x:auto;}
+
+.graph-lines{font-family:var(--mono);line-height:2.2;font-size:1rem;}
+.edge-label{color:#cc3300;}
+
+.seq-lines{font-family:var(--mono);line-height:2.4;font-size:1rem;color:#c97a52;}
+
+table.matrix{border-collapse:collapse;margin:8px auto;}
+table.matrix td{
+  border:1px solid #2a0e06;
+  padding:10px 22px;
+  text-align:center;
+  font-size:1rem;
+  color:#c97a52;
+  background:rgba(0,0,0,0.3);
+}
+table.matrix td.missing{
+  color:#cc3300;
+  animation:blink-red 1.2s infinite;
+  text-shadow:0 0 8px #cc2200;
+}
+@keyframes blink-red{0%,100%{opacity:1;text-shadow:0 0 8px #cc2200}50%{opacity:0.2;text-shadow:none}}
+
+.instr {
+  background:rgba(80,20,0,0.15);
+  border-left:3px solid #5a2000;
+  padding:10px 14px;
+  margin:14px 0;
+  font-size:0.95rem;
+  color:#aa6840;
+  font-family:var(--worn);
+  line-height:1.8;
+}
+
+/* Solved overlay */
+.solved-banner {
+  background:rgba(30,50,0,0.3);
+  border:1px solid #4a7000;
+  color:#7ab800;
+  font-family:var(--worn);
+  font-size:0.9rem;
+  padding:12px 18px;
+  text-align:center;
+  letter-spacing:2px;
+  margin-bottom:14px;
+  box-shadow:0 0 16px rgba(80,120,0,0.2);
+  text-shadow:0 0 8px rgba(120,180,0,0.4);
+}
+
+/* Answer area */
+.ans-area{margin-top:22px;}
+.ans-label{font-size:0.8rem;letter-spacing:3px;color:#cc3300;text-transform:uppercase;margin-bottom:10px;}
+.ans-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.ans-input {
+  background:rgba(0,0,0,0.7);
+  border:1px solid #2a0e06;
+  color:#ff4422;
+  font-family:var(--mono);
+  font-size:1.2rem;
+  padding:9px 14px;
+  width:110px;
+  text-align:center;
+  outline:none;
+  transition:all .2s;
+  caret-color:#ff2200;
+}
+.ans-input:focus{
+  border-color:#cc2200;
+  box-shadow:0 0 14px rgba(180,20,0,0.35), inset 0 0 10px rgba(100,0,0,0.2);
+}
+.ans-input.text-big{width:200px;font-size:1.35rem;letter-spacing:6px;text-transform:uppercase;}
+.sub-btn {
+  background:rgba(60,5,0,0.5);
+  border:1px solid #882200;
+  color:#cc4422;
+  font-family:var(--mono);
+  font-size:0.78rem;
+  padding:9px 22px;
+  cursor:pointer;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  transition:all .2s;
+}
+.sub-btn:hover{
+  background:rgba(130,20,0,0.3);
+  box-shadow:0 0 16px rgba(180,20,0,0.35);
+  border-color:#cc2200;
+  color:#ff4422;
+}
+.feedback{min-height:22px;margin-top:10px;font-size:0.95rem;font-family:var(--worn);transition:all .3s;}
+.feedback.ok{color:#7ab800;text-shadow:0 0 10px rgba(100,160,0,0.4);}
+.feedback.bad{color:#ff2200;animation:shake .4s ease;text-shadow:0 0 8px rgba(255,20,0,0.4);}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+
+/* All panels complete banner */
+#complete-banner {
+  display:none;
+  text-align:center;
+  border:1px solid #882200;
+  background:rgba(80,10,0,0.2);
+  padding:18px;
+  margin-bottom:16px;
+  animation:panel-slidein .4s ease;
+  box-shadow:0 0 30px rgba(150,10,0,0.2);
+}
+#complete-banner.on { display:block; }
+.complete-text {
+  font-family:var(--horror);
+  font-size:1.5rem;
+  color:#ff4422;
+  letter-spacing:3px;
+  margin-bottom:8px;
+  text-shadow:0 0 18px rgba(200,30,0,0.5);
+}
+
+/* ── FINAL ───────────────────────────────────── */
+#final {text-align:center;padding:30px 10px 20px;}
+.final-title{
+  font-family:var(--horror);
+  font-size:2.5rem;
+  color:#cc2200;
+  margin:12px 0 6px;
+  text-shadow:0 0 20px rgba(180,20,0,0.5), 3px 3px 0 #1a0000;
+}
+
+/* ── VICTORY ─────────────────────────────────── */
+#victory {
+  text-align:center;
+  padding:50px 20px 50px;
+  position:relative;
+  display:none;
+}
+#victory.on { display:block; }
+
+.victory-title {
+  font-family:var(--horror);
+  font-size:clamp(2.2rem,7vw,3.8rem);
+  color:#7ab800;
+  letter-spacing:3px;
+  animation:victory-fadein 1.2s ease forwards;
+  text-shadow:0 0 18px rgba(100,160,0,0.4), 2px 2px 0 #0a1a00;
+  opacity:0;
+}
+@keyframes victory-fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.victory-body {
+  font-family:var(--worn);
+  color:#6b8050;
+  font-size:0.98rem;
+  line-height:2.1;
+  margin:22px auto 26px;
+  max-width:460px;
+  animation:victory-fadein 1s 0.5s both;
+}
+
+.v-word {
+  font-family:var(--horror);
+  font-size:1.7rem;
+  letter-spacing:5px;
+  color:#7ab800;
+  text-shadow:0 0 12px rgba(100,160,0,0.35);
+}
+
+.badge-ok {
+  display:inline-block;
+  border:1px solid #3a6010;
+  color:#5a9010;
+  font-family:var(--mono);
+  font-size:0.8rem;
+  padding:8px 22px;
+  letter-spacing:3px;
+  margin:6px 0 20px;
+  animation:victory-fadein 0.8s 1s both;
+}
+
+.btn-reset {
+  background:transparent;
+  border:1px solid #2a3a18;
+  color:#4a5a30;
+  font-family:var(--mono);
+  font-size:0.75rem;
+  padding:9px 28px;
+  cursor:pointer;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-top:8px;
+  transition:all .2s;
+  animation:victory-fadein 0.6s 1.4s both;
+}
+.btn-reset:hover{border-color:#5a8020;color:#7ab800;}
+
+.go-final-btn {
+  background:rgba(80,10,0,0.25);
+  border:2px solid #882200;
+  color:#cc4422;
+  font-family:var(--mono);
+  font-size:0.85rem;
+  padding:12px 36px;
+  cursor:pointer;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  transition:all .25s;
+  margin-top:6px;
+  box-shadow:0 0 20px rgba(120,10,0,0.2);
+}
+.go-final-btn:hover{
+  background:rgba(140,15,0,0.3);
+  box-shadow:0 0 28px rgba(180,15,0,0.4);
+  border-color:#cc2200;
+  color:#ff4422;
+}
+
+/* Ambient blood drip decorations */
+.drip-bar {
+  width:100%;
+  height:6px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    #3a0000 10%,
+    #6b0000 20%,
+    #3a0000 30%,
+    transparent 40%,
+    #4a0000 55%,
+    #6b0000 65%,
+    transparent 80%,
+    #3a0000 90%,
+    transparent 100%
+  );
+  margin: 0 0 24px;
+  position:relative;
+  overflow:visible;
+}
+.drip-bar::after {
+  content:'';
+  position:absolute;
+  top:0;left:15%;width:3px;height:28px;
+  background:linear-gradient(to bottom, #6b0000, transparent);
+  border-radius:0 0 3px 3px;
+}
+
+.final-panel { display:block !important; border:1px solid #2a0e06; background:linear-gradient(160deg,#0d0603 0%,#0a0402 100%); padding:28px 28px 24px; position:relative; box-shadow:0 4px 40px rgba(100,5,0,0.15); }
+  .panel{padding:18px 14px;}
+  table.matrix td{padding:8px 14px;}
+  .ans-input.text-big{width:155px;font-size:1.1rem;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- INTRO -->
+<div id="intro" class="screen on">
+  <div class="drip-bar"></div>
+  <h1 class="main-title">FUEL CRISIS<br>THE CONTROL LOCKDOWN</h1>
+  <p class="main-sub">Dead Zone — Emergency Protocol 7</p>
+  <hr class="divider">
+  <div class="intro-story">
+    <p>The last LPG cylinder in the compound is failing.</p><br>
+    <p>Somewhere in the building, the infected overwhelmed the engineering team. The emergency backup fuel-distribution system — <strong>seven independent safety panels</strong> — is all that stands between you and a catastrophic gas rupture.</p><br>
+    <p>A pressure leak has begun. The supply line grows unstable by the minute.</p><br>
+    <p>Painted on the cracked wall, in letters dark as old blood:</p>
+  </div>
+  <p class="wall-msg">"DON'T LET IT ALL GO AT ONCE."</p>
+  <p class="wall-sub">
+    Each system yields a number. Convert each number to a letter using A = 1, B = 2, … Z = 26.<br>
+    <em>The outputs are NOT in order. Figure out the word.</em>
+  </p>
+  <hr class="divider">
+  <p style="color:var(--text-dim);font-family:var(--worn);font-size:0.85rem;margin-bottom:22px;">Seven panels. Seven codes. One word to save you all.</p>
+  <button class="btn-start" onclick="startGame()">▶ INITIATE OVERRIDE</button>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+
+  <div id="hud">
+    <div class="hud-top">
+      <span class="badge" id="pressure-badge">WARNING: pressure critical</span>
+      <span class="badge" id="panel-count">0 / 7 panels secured</span>
+    </div>
+    <div class="panel-tabs" id="panel-tabs"></div>
+  </div>
+
+  <div id="letters-row"></div>
+
+  <div id="complete-banner">
+    <div class="complete-text">ALL PANELS SECURED</div>
+    <p style="font-family:var(--worn);color:var(--text-dim);font-size:0.88rem;margin-bottom:12px;">All seven codes recovered. Proceed to the override sequence.</p>
+    <button class="go-final-btn" onclick="showFinal()">▶ ENTER OVERRIDE WORD</button>
+  </div>
+
+  <!-- PANEL 1 -->
+  <div class="panel" id="p1">
+    <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+    <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+    <div class="pnum">Panel 01 — Thermal Systems</div>
+    <div class="ptitle">Thermal Decay Calibration</div>
+    <div class="pstory">The emergency heat-buffer coil must release stored energy gradually, or the burner will surge and rupture the final gas line. Total thermal discharge over the first second follows a weighted exponential model. A handwritten note reads: <em>"Solve exactly. Approximation risks overload."</em></div>
+    <div class="puzzle-box">
+      <div class="plabel">Evaluate exactly — integration by parts, twice:</div>
+      <div class="math-block" id="m1">$$\int_0^1 x^2 e^x \, dx$$</div>
+    </div>
+    <div class="instr">Multiply your exact result by 10 and round to the nearest whole number. Then add 13.</div>
+    <div class="ans-area">
+      <div class="ans-label">Enter Panel Code:</div>
+      <div class="ans-row">
+        <input class="ans-input" id="a1" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(1)">
+        <button class="sub-btn" onclick="check(1)">SUBMIT</button>
+      </div>
+      <div class="feedback" id="f1"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 2 -->
+  <div class="panel" id="p2">
+    <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+    <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+    <div class="pnum">Panel 02 — Ignition Systems</div>
+    <div class="ptitle">Ignition Circuit Regulator</div>
+    <div class="pstory">Three current channels power the ignition chamber. To avoid burning out the final spark plug, current must be balanced exactly. Find all three current values, then calculate the correction factor.</div>
+    <div class="puzzle-box">
+      <div class="plabel">Solve the system:</div>
+      <div class="math-block" id="m2">
+        $$I_1 + I_2 + I_3 = 12$$
+        $$I_1 - I_2 + I_3 = 4$$
+        $$I_1 + I_2 - I_3 = 2$$
+      </div>
+    </div>
+    <div class="instr">Correction Factor (raw) = I₁ − I₂ + I₃. &nbsp;Then subtract 1 and round down to the nearest whole number.</div>
+    <div class="ans-area">
+      <div class="ans-label">Enter Correction Factor:</div>
+      <div class="ans-row">
+        <input class="ans-input" id="a2" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(2)">
+        <button class="sub-btn" onclick="check(2)">SUBMIT</button>
+      </div>
+      <div class="feedback" id="f2"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 3 -->
+  <div class="panel" id="p3">
+    <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+    <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+    <div class="pnum">Panel 03 — Pressure Grid</div>
+    <div class="ptitle">Pressure Grid Resonance</div>
+    <div class="pstory">The wall matrix monitors compression waves through the backup fuel chamber. A central sensor has failed. Restore it — or the chamber enters resonance and ruptures. <em>"Each row follows the same amplification rule."</em></div>
+    <div class="puzzle-box">
+      <div class="plabel">Restore the missing sensor value:</div>
+      <table class="matrix">
+        <tr><td>3</td><td>12</td><td>21</td></tr>
+        <tr><td>4</td><td>16</td><td>28</td></tr>
+        <tr><td>5</td><td class="missing">?</td><td>35</td></tr>
+      </table>
+    </div>
+    <div class="instr">Each row follows the same amplification rule. Restore the missing value, then remove the chamber's baseline pressure (top left). Add 1 unit for sensor recalibration.</div>
+    <div class="ans-area">
+      <div class="ans-label">Enter Panel Code:</div>
+      <div class="ans-row">
+        <input class="ans-input" id="a3" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(3)">
+        <button class="sub-btn" onclick="check(3)">SUBMIT</button>
+      </div>
+      <div class="feedback" id="f3"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 4 -->
+  <div class="panel" id="p4">
+    <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+    <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+    <div class="pnum">Panel 04 — Pipe Routing</div>
+    <div class="ptitle">Relay Pipe Routing</div>
+    <div class="pstory">Fuel must be routed through the least wasteful pipe sequence from Junction A to Junction D. Each number is the pressure loss along that pipe segment. Find the minimum total loss.</div>
+    <div class="puzzle-box">
+      <div class="plabel">Pressure loss per segment (A → D):</div>
+      <div class="graph-lines" style="padding:8px 0;">
+        <span class="edge-label">A → B</span> &nbsp;= 5 &nbsp;&nbsp;&nbsp;
+        <span class="edge-label">A → C</span> &nbsp;= 9<br>
+        <span class="edge-label">B → C</span> &nbsp;= 3 &nbsp;&nbsp;&nbsp;
+        <span class="edge-label">B → D</span> = 12<br>
+        <span class="edge-label">C → D</span> &nbsp;= 7
+      </div>
+    </div>
+    <div class="instr">Find the path from A to D with minimum total pressure loss.</div>
+    <div class="ans-area">
+      <div class="ans-label">Minimum Loss Value:</div>
+      <div class="ans-row">
+        <input class="ans-input" id="a4" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(4)">
+        <button class="sub-btn" onclick="check(4)">SUBMIT</button>
+      </div>
+      <div class="feedback" id="f4"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 5 -->
+  <div class="panel" id="p5">
+    <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+    <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+    <div class="pnum">Panel 05 — Rotary Systems</div>
+    <div class="ptitle">Rotary Valve Override</div>
+    <div class="pstory">The emergency release wheel has 26 numbered slots. It wraps continuously — after slot 26 comes slot 1. A precise override sequence must be executed or the valve stays locked forever.</div>
+    <div class="puzzle-box">
+      <div class="plabel">Execute override sequence:</div>
+      <div class="seq-lines" style="padding:6px 0;">
+        Current position: <strong style="color:var(--bright)">11</strong><br>
+        → Forward &nbsp;<strong>8</strong> slots<br>
+        → Backward <strong>5</strong> slots<br>
+        → Forward &nbsp;<strong>4</strong> slots<br>
+        → Backward <strong>4</strong> slots
+      </div>
+    </div>
+    <div class="instr">The wheel has 26 slots and wraps continuously. What is the final slot position?</div>
+    <div class="ans-area">
+      <div class="ans-label">Final Slot Number:</div>
+      <div class="ans-row">
+        <input class="ans-input" id="a5" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(5)">
+        <button class="sub-btn" onclick="check(5)">SUBMIT</button>
+      </div>
+      <div class="feedback" id="f5"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 6 -->
+  <div class="panel" id="p6">
+    <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+    <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+    <div class="pnum">Panel 06 — Oxygen Systems</div>
+    <div class="ptitle">Oxygen Compensation System</div>
+    <div class="pstory">The burner requires exact oxygen compensation or the flame dies — leaving the compound in darkness with the infected. Solve for the valid pressure setting and compute the adjusted oxygen code.</div>
+    <div class="puzzle-box">
+      <div class="plabel">Solve for x (valid positive solution):</div>
+      <div class="math-block" id="m6">$$\frac{x+5}{x-1} + \frac{x-1}{x+1} = 4$$</div>
+    </div>
+    <div class="instr">The chamber monitor displays the equation above. Solve for the valid positive pressure setting. Round down to the nearest integer. Then calculate 5x.</div>
+    <div class="ans-area">
+      <div class="ans-label">Adjusted Oxygen Code (5x):</div>
+      <div class="ans-row">
+        <input class="ans-input" id="a6" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(6)">
+        <button class="sub-btn" onclick="check(6)">SUBMIT</button>
+      </div>
+      <div class="feedback" id="f6"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 7 -->
+  <div class="panel" id="p7">
+    <div class="panel-corner tl"></div><div class="panel-corner tr"></div>
+    <div class="panel-corner bl"></div><div class="panel-corner br"></div>
+    <div class="pnum">Panel 07 — Flame Control</div>
+    <div class="ptitle">Flame Pulse Forecast</div>
+    <div class="pstory">The burner flame pulses according to delayed heat feedback. Pulse intensity follows a recurrence relation. Predict the fourth pulse intensity correctly — or the flame goes critical.</div>
+    <div class="puzzle-box">
+      <div class="plabel">Recurrence sequence:</div>
+      <div class="math-block" id="m7">
+        $$f(1) = 1, \quad f(2) = 2$$
+        $$f(n) = 3f(n-1) - f(n-2)$$
+      </div>
+    </div>
+    <div class="instr">Compute f(4). Then subtract one stabilization unit.</div>
+    <div class="ans-area">
+      <div class="ans-label">Adjusted Pulse Value:</div>
+      <div class="ans-row">
+        <input class="ans-input" id="a7" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(7)">
+        <button class="sub-btn" onclick="check(7)">SUBMIT</button>
+      </div>
+      <div class="feedback" id="f7"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FINAL -->
+<div id="final" class="screen">
+  <p class="main-sub" style="margin-top:30px;">All Panels Secured</p>
+  <div class="final-title">The Override Word</div>
+  <hr class="divider">
+  <div class="panel final-panel" style="margin-top:0;display:block!important;">
+    <div class="pstory">You've recovered all seven codes. Below are the letters — but <strong>NOT</strong> in order. Rearrange them to form the one word that will stabilise the fuel system.</div>
+    <div id="final-letters" style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:16px 0 20px;"></div>
+    <div class="instr">Unscramble the 7 letters above to reveal the override word.</div>
+    <div class="ans-area">
+      <div class="ans-label">Enter Override Word:</div>
+      <div class="ans-row">
+        <input class="ans-input text-big" id="afinal" type="text" maxlength="7" placeholder="———" onkeydown="if(event.key==='Enter')checkFinal()">
+        <button class="sub-btn" onclick="checkFinal()">OVERRIDE</button>
+      </div>
+      <div class="feedback" id="ffinal"></div>
+    </div>
+  </div>
+</div>
+
+<!-- VICTORY -->
+<div id="victory" class="screen">
+  <div class="victory-title">OVERRIDE ACCEPTED</div>
+  <hr class="divider">
+  <div class="victory-body">
+    The system stabilises.<br>
+    The gas flow evens out.<br>
+    The flame steadies.<br><br>
+    <span class="v-word">"MANUAL OVERRIDE ACCEPTED."</span><br><br>
+    You held the line. For now.
+  </div>
+  <div class="badge-ok">✓ FACILITY SECURE</div>
+</div>
+
+</div>
+
+<script>
+const ANSWERS = [20, 3, 18, 15, 14, 15, 12];
+const LETTERS = ['T', 'C', 'R', 'O', 'N', 'O', 'L'];
+const PANEL_NAMES = ['Thermal','Ignition','Pressure','Pipes','Rotary','Oxygen','Flame'];
+const HINTS = [
+  "Hint: ∫₀¹ x²eˣ dx = e−2 ≈ 0.718 → ×10 = 7.18 → round = 7 → +13 = 20",
+  "Hint: I₁=3, I₂=4, I₃=5 → CF_raw = 3−4+5 = 4 → 4−1 = 3",
+  "Hint: The rule doubles each time → missing = 20 → 20−3+1 = 18",
+  "Hint: Try A→B→C→D = 5+3+7 = 15",
+  "Hint: 11+8=19, 19−5=14, 14+4=18, 18−4=14",
+  "Hint: (x+5)/(x-1)+(x-1)/(x+1)=4 → x²−2x−5=0 → x=1+√6≈3.449 → floor=3 → 5×3=15",
+  "Hint: f(3)=3×2−1=5, f(4)=3×5−2=13. 13−1=12"
+];
+
+let solved = Array(7).fill(false);
+let tries = Array(7).fill(0);
+let currentPanel = 1;
+
+function startGame() {
+  document.getElementById('intro').classList.remove('on');
+  document.getElementById('game').classList.add('on');
+  document.getElementById('hud').classList.add('on');
+  document.getElementById('letters-row').classList.add('on');
+  buildHUD();
+  buildLetters();
+  showPanel(1);
+  renderMath();
+}
+
+function buildHUD() {
+  const tabs = document.getElementById('panel-tabs');
+  tabs.innerHTML = '';
+  for (let i = 1; i <= 7; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'ptab' + (i === 1 ? ' active' : '');
+    btn.id = 'tab' + i;
+    btn.textContent = 'P' + i + ' ' + PANEL_NAMES[i-1];
+    btn.onclick = () => showPanel(i);
+    tabs.appendChild(btn);
+  }
+}
+
+function buildLetters() {
+  const r = document.getElementById('letters-row');
+  r.innerHTML = '';
+  for (let i = 1; i <= 7; i++) {
+    const b = document.createElement('div');
+    b.className = 'lbox';
+    b.id = 'lb' + i;
+    b.innerHTML = '?<span class="lbox-label">P' + i + '</span>';
+    r.appendChild(b);
+  }
+}
+
+function showPanel(n) {
+  document.querySelectorAll('#game .panel').forEach(p => p.classList.remove('on'));
+  const p = document.getElementById('p' + n);
+  if (p) p.classList.add('on');
+
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById('tab' + n);
+  if (tab) tab.classList.add('active');
+
+  currentPanel = n;
+
+  if (solved[n-1]) {
+    const existingBanner = p.querySelector('.solved-banner');
+    if (!existingBanner) {
+      const banner = document.createElement('div');
+      banner.className = 'solved-banner';
+      banner.textContent = '✓ PANEL SECURED — Letter: ' + LETTERS[n-1];
+      p.insertBefore(banner, p.querySelector('.puzzle-box'));
+    }
+    const inp = document.getElementById('a' + n);
+    if (inp) inp.disabled = true;
+  }
+
+  setTimeout(renderMath, 80);
+}
+
+function updateHUD() {
+  const count = solved.filter(Boolean).length;
+  document.getElementById('panel-count').textContent = count + ' / 7 panels secured';
+  document.getElementById('pressure-badge').textContent = 'WARNING: ' + (7 - count) + ' panels remaining';
+
+  for (let i = 1; i <= 7; i++) {
+    const tab = document.getElementById('tab' + i);
+    if (tab) {
+      if (solved[i-1]) {
+        tab.classList.add('done');
+        tab.classList.remove('active');
+      }
+    }
+  }
+  const activeTab = document.getElementById('tab' + currentPanel);
+  if (activeTab && !solved[currentPanel-1]) activeTab.classList.add('active');
+
+  if (count === 7) {
+    document.getElementById('complete-banner').classList.add('on');
+    document.getElementById('complete-banner').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function renderMath() {
+  if (window.renderMathInElement) {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false }
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+function check(n) {
+  if (solved[n-1]) return;
+  const inp = document.getElementById('a' + n);
+  const fb = document.getElementById('f' + n);
+  const val = parseInt(inp.value);
+  tries[n-1]++;
+
+  if (val === ANSWERS[n-1]) {
+    solved[n-1] = true;
+    fb.className = 'feedback ok';
+    fb.textContent = '✓ CORRECT — Code ' + val + ' accepted. Letter unlocked: ' + LETTERS[n-1];
+    inp.disabled = true;
+
+    const lbox = document.getElementById('lb' + n);
+    lbox.innerHTML = LETTERS[n-1] + '<span class="lbox-label">P' + n + '</span>';
+    lbox.classList.add('lit');
+
+    updateHUD();
+
+    const p = document.getElementById('p' + n);
+    if (!p.querySelector('.solved-banner')) {
+      const banner = document.createElement('div');
+      banner.className = 'solved-banner';
+      banner.textContent = '✓ PANEL SECURED — Letter: ' + LETTERS[n-1];
+      p.insertBefore(banner, p.querySelector('.puzzle-box'));
+    }
+  } else {
+    fb.className = 'feedback bad';
+    let m = '✗ Incorrect. ';
+    if (tries[n-1] >= 3) m += HINTS[n-1];
+    else m += 'Try again. (Attempt ' + tries[n-1] + ')';
+    fb.textContent = m;
+    inp.value = '';
+    inp.focus();
+  }
+}
+
+function showFinal() {
+  document.getElementById('game').classList.remove('on');
+  document.getElementById('hud').classList.remove('on');
+  document.getElementById('letters-row').classList.remove('on');
+  document.getElementById('final').classList.add('on');
+
+  const fl = document.getElementById('final-letters');
+  fl.innerHTML = '';
+  LETTERS.forEach((l, i) => {
+    const b = document.createElement('div');
+    b.className = 'lbox lit';
+    b.style.cursor = 'default';
+    b.innerHTML = l + '<span class="lbox-label">P' + (i+1) + '</span>';
+    fl.appendChild(b);
+  });
+
+  setTimeout(() => {
+    const inp = document.getElementById('afinal');
+    if (inp) {
+      inp.disabled = false;
+      inp.value = '';
+      inp.focus();
+    }
+    const fb = document.getElementById('ffinal');
+    if (fb) { fb.textContent = ''; fb.className = 'feedback'; }
+  }, 100);
+}
+
+function checkFinal() {
+  const inp = document.getElementById('afinal');
+  const fb = document.getElementById('ffinal');
+  if (!inp || !fb) return;
+  const val = inp.value.trim().toUpperCase();
+  if (val === 'CONTROL') {
+    fb.className = 'feedback ok';
+    fb.textContent = '✓ OVERRIDE WORD ACCEPTED — RELEASING LOCKDOWN...';
+    inp.disabled = true;
+    setTimeout(() => {
+      document.getElementById('final').classList.remove('on');
+      document.getElementById('victory').classList.add('on');
+    }, 1400);
+  } else {
+    fb.className = 'feedback bad';
+    fb.textContent = '✗ "' + val + '" is not the override word. Rearrange all 7 letters.';
+    inp.value = '';
+    inp.focus();
+  }
+}
+
+function resetGame() {
+  solved = Array(7).fill(false);
+  tries = Array(7).fill(0);
+  currentPanel = 1;
+  document.querySelectorAll('.ans-input').forEach(i => { i.disabled = false; i.value = ''; });
+  document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+  document.querySelectorAll('.solved-banner').forEach(b => b.remove());
+  document.getElementById('complete-banner').classList.remove('on');
+  document.getElementById('victory').classList.remove('on');
+  document.getElementById('final').classList.remove('on');
+  document.getElementById('game').classList.remove('on');
+  document.getElementById('hud').classList.remove('on');
+  document.getElementById('letters-row').classList.remove('on');
+  document.getElementById('intro').classList.add('on');
+}
+
+document.addEventListener('DOMContentLoaded', renderMath);
+
+// Ambient red screen flicker
+(function(){
+  const flicker = document.createElement('div');
+  flicker.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:9997;background:rgba(120,0,0,0);transition:background 0.08s;';
+  document.body.appendChild(flicker);
+
+  function randomFlicker() {
+    const intensity = Math.random() * 0.06;
+    flicker.style.background = `rgba(120,0,0,${intensity})`;
+    setTimeout(() => {
+      flicker.style.background = 'rgba(120,0,0,0)';
+    }, 80 + Math.random() * 120);
+    setTimeout(randomFlicker, 2500 + Math.random() * 6000);
+  }
+  setTimeout(randomFlicker, 1500);
+
+  // Occasional deep red flash
+  function deepFlash() {
+    flicker.style.background = 'rgba(80,0,0,0.12)';
+    setTimeout(() => { flicker.style.background = 'rgba(120,0,0,0.04)'; }, 60);
+    setTimeout(() => { flicker.style.background = 'rgba(80,0,0,0)'; }, 200);
+    setTimeout(deepFlash, 8000 + Math.random() * 14000);
+  }
+  setTimeout(deepFlash, 4000);
+})();
+</script>
+</body>
+</html>
