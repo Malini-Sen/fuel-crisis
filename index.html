@@ -106,18 +106,46 @@ body::after {
 .badge{font-size:0.8rem;letter-spacing:3px;padding:5px 14px;border:1px solid #5a1a00;color:#cc4400;text-transform:uppercase;background:rgba(60,5,0,0.5);animation:badge-pulse 3s ease-in-out infinite;}
 @keyframes badge-pulse{0%,100%{border-color:#5a1a00}50%{border-color:#8b2a00;box-shadow:0 0 8px rgba(150,30,0,0.3)}}
 
+/* ── LIVE SCORE BADGE in HUD ── */
+.live-score-badge {
+  font-size:0.8rem;
+  letter-spacing:3px;
+  padding:5px 14px;
+  border:1px solid #3a6010;
+  color:#7ab800;
+  text-transform:uppercase;
+  background:rgba(20,40,0,0.35);
+  font-family:var(--mono);
+  transition: all 0.4s;
+  box-shadow: 0 0 8px rgba(80,140,0,0.1);
+}
+.live-score-badge.pulse {
+  animation: score-pop 0.5s ease;
+}
+@keyframes score-pop {
+  0%  { transform: scale(1);   box-shadow: 0 0 8px rgba(80,140,0,0.1); }
+  40% { transform: scale(1.1); box-shadow: 0 0 20px rgba(100,180,0,0.5); }
+  100%{ transform: scale(1);   box-shadow: 0 0 8px rgba(80,140,0,0.1); }
+}
+
 .panel-tabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
 .ptab{background:rgba(20,5,0,0.7);border:1px solid #2a0e06;color:#5a2a10;font-family:var(--mono);font-size:0.8rem;padding:6px 12px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:all .2s;position:relative;}
 .ptab:hover{border-color:#882200;color:#cc4422;box-shadow:0 0 8px rgba(150,20,0,0.2);}
 .ptab.active{border-color:#cc2200;color:#ff4422;background:rgba(100,10,0,0.25);box-shadow:0 0 12px rgba(180,20,0,0.3);}
 .ptab.done{border-color:#4a7000;color:#7ab800;background:rgba(30,50,0,0.2);}
 .ptab.done::after{content:'✓';margin-left:5px;font-size:0.6rem;}
+/* Locked tab style */
+.ptab.locked{border-color:#6b0000;color:#8b0000;background:rgba(60,0,0,0.35);cursor:pointer;animation:locked-tab-pulse 2.5s ease-in-out infinite;}
+.ptab.locked::after{content:'[X]';margin-left:4px;font-size:0.6rem;}
+@keyframes locked-tab-pulse{0%,100%{border-color:#6b0000;box-shadow:none;}50%{border-color:#aa0000;box-shadow:0 0 8px rgba(150,0,0,0.3);}}
 
 #letters-row{display:none;justify-content:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
 #letters-row.on{display:flex;}
 .lbox{width:46px;height:56px;border:1px solid #2a0e06;display:flex;align-items:center;justify-content:center;font-family:var(--horror);font-size:1.7rem;color:#0a0604;background:#0a0604;transition:all .6s;position:relative;box-shadow:inset 0 0 8px rgba(0,0,0,0.8);}
 .lbox.lit{border-color:#cc2200;color:#ff4422;background:rgba(100,10,0,0.2);text-shadow:0 0 12px #cc2200, 0 0 24px #660000;box-shadow:0 0 16px rgba(180,20,0,0.4), inset 0 0 10px rgba(100,0,0,0.2);animation:letter-emerge .6s ease forwards;}
 @keyframes letter-emerge{0%{transform:scale(1.4);opacity:0}60%{transform:scale(0.95)}100%{transform:scale(1);opacity:1}}
+/* Locked letter box */
+.lbox.locked-box{border-color:#6b0000;background:rgba(40,0,0,0.4);color:#4a0000;text-shadow:none;box-shadow:inset 0 0 12px rgba(80,0,0,0.6);}
 .lbox-label{position:absolute;bottom:2px;font-size:0.55rem;letter-spacing:1px;color:#4a1a08;font-family:var(--mono);}
 
 .panel{border:1px solid #2a0e06;background:linear-gradient(160deg, #0d0603 0%, #0a0402 100%);padding:28px 28px 24px;margin-bottom:20px;display:none;position:relative;animation:panel-slidein .4s ease;box-shadow:0 4px 40px rgba(100,5,0,0.15), inset 0 0 60px rgba(0,0,0,0.4);}
@@ -125,6 +153,8 @@ body::after {
 @keyframes panel-slidein{from{opacity:0;transform:translateY(20px) skewX(-0.5deg)}to{opacity:1;transform:translateY(0) skewX(0)}}
 .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#cc2200,#ff4422,#cc2200,transparent);box-shadow:0 0 12px #aa1100;}
 .panel::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#3a0e00,transparent);}
+/* Locked panel override */
+.panel.panel-locked-state::before{background:linear-gradient(90deg,transparent,#6b0000,#8b0000,#6b0000,transparent);box-shadow:0 0 12px #4a0000;}
 
 .panel-corner{position:absolute;width:14px;height:14px;border-color:#4a1a08;border-style:solid;border-width:0;}
 .panel-corner.tl{top:6px;left:6px;border-top-width:1px;border-left-width:1px;}
@@ -155,17 +185,52 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
 
 .solved-banner{background:rgba(30,50,0,0.3);border:1px solid #4a7000;color:#7ab800;font-family:var(--worn);font-size:0.9rem;padding:12px 18px;text-align:center;letter-spacing:2px;margin-bottom:14px;box-shadow:0 0 16px rgba(80,120,0,0.2);text-shadow:0 0 8px rgba(120,180,0,0.4);}
 
+/* ── LOCKED BANNER ── */
+.locked-banner{
+  background:rgba(60,0,0,0.45);
+  border:1px solid #8b0000;
+  color:#cc0000;
+  font-family:var(--worn);
+  font-size:0.95rem;
+  padding:14px 18px;
+  text-align:center;
+  letter-spacing:2px;
+  margin-bottom:14px;
+  box-shadow:0 0 20px rgba(120,0,0,0.3);
+  text-shadow:0 0 10px rgba(200,0,0,0.5);
+  animation: locked-banner-flicker 2s ease-in-out infinite;
+}
+.locked-banner strong{
+  font-family:var(--horror);
+  font-size:1.15rem;
+  display:block;
+  margin-bottom:4px;
+  color:#ff1a00;
+  letter-spacing:4px;
+}
+@keyframes locked-banner-flicker{
+  0%,100%{opacity:1;}
+  48%{opacity:1;}
+  50%{opacity:0.7;}
+  52%{opacity:1;}
+  80%{opacity:0.9;}
+}
+
 .ans-area{margin-top:22px;}
 .ans-label{font-size:0.8rem;letter-spacing:3px;color:#cc3300;text-transform:uppercase;margin-bottom:10px;}
 .ans-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 .ans-input{background:rgba(0,0,0,0.7);border:1px solid #2a0e06;color:#ff4422;font-family:var(--mono);font-size:1.2rem;padding:9px 14px;width:110px;text-align:center;outline:none;transition:all .2s;caret-color:#ff2200;}
 .ans-input:focus{border-color:#cc2200;box-shadow:0 0 14px rgba(180,20,0,0.35), inset 0 0 10px rgba(100,0,0,0.2);}
 .ans-input.text-big{width:200px;font-size:1.35rem;letter-spacing:6px;text-transform:uppercase;}
+/* Locked input */
+.ans-input:disabled{background:rgba(30,0,0,0.5);border-color:#3a0000;color:#4a0000;cursor:not-allowed;}
 .sub-btn{background:rgba(60,5,0,0.5);border:1px solid #882200;color:#cc4422;font-family:var(--mono);font-size:0.78rem;padding:9px 22px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;transition:all .2s;}
 .sub-btn:hover{background:rgba(130,20,0,0.3);box-shadow:0 0 16px rgba(180,20,0,0.35);border-color:#cc2200;color:#ff4422;}
+.sub-btn:disabled{opacity:0.3;cursor:not-allowed;box-shadow:none;}
 .feedback{min-height:22px;margin-top:10px;font-size:0.95rem;font-family:var(--worn);transition:all .3s;}
 .feedback.ok{color:#7ab800;text-shadow:0 0 10px rgba(100,160,0,0.4);}
 .feedback.bad{color:#ff2200;animation:shake .4s ease;text-shadow:0 0 8px rgba(255,20,0,0.4);}
+.feedback.locked{color:#8b0000;font-style:italic;}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 
 #complete-banner{display:none;text-align:center;border:1px solid #882200;background:rgba(80,10,0,0.2);padding:18px;margin-bottom:16px;animation:panel-slidein .4s ease;box-shadow:0 0 30px rgba(150,10,0,0.2);}
@@ -192,7 +257,7 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
 
 .final-panel{display:block !important;border:1px solid #2a0e06;background:linear-gradient(160deg,#0d0603 0%,#0a0402 100%);padding:28px 28px 24px;position:relative;box-shadow:0 4px 40px rgba(100,5,0,0.15);}
 
-/* ── SCORE DISPLAY ──────────────────────────── */
+/* ── SCORE DISPLAY (victory screen) ── */
 .score-block {
   margin: 28px auto 8px;
   max-width: 380px;
@@ -252,6 +317,72 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
   letter-spacing: 1px;
   margin-top: 4px;
 }
+
+/* ── LIVE SCORE PANEL (in game screen) ── */
+#live-score-panel {
+  display: none;
+  border: 1px solid #2a3a10;
+  background: rgba(10,20,0,0.4);
+  padding: 12px 18px;
+  margin-bottom: 14px;
+  position: relative;
+}
+#live-score-panel.on { display: block; }
+#live-score-panel::before {
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#3a6010,transparent);
+}
+.lsp-label {
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  color: #3a5010;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.lsp-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lsp-breakdown {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: #4a6020;
+  line-height: 1.9;
+}
+.lsp-breakdown .lsp-ok   { color: #7ab800; }
+.lsp-breakdown .lsp-lock { color: #6b0000; }
+.lsp-breakdown .lsp-pend { color: #3a3a20; }
+.lsp-total {
+  text-align: right;
+}
+.lsp-total-num {
+  font-family: var(--horror);
+  font-size: 2rem;
+  color: #5a8810;
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(80,140,0,0.25);
+  transition: all 0.4s;
+}
+.lsp-total-num.bump {
+  animation: score-pop 0.5s ease;
+}
+.lsp-out-of {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: #3a5010;
+  margin-left: 3px;
+}
+.lsp-note {
+  font-family: var(--worn);
+  font-size: 0.72rem;
+  color: #2a3a10;
+  margin-top: 4px;
+  font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -285,10 +416,24 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
     <div class="hud-top">
       <span class="badge" id="pressure-badge">WARNING: pressure critical</span>
       <span class="badge" id="panel-count">0 / 7 panels secured</span>
+      <span class="live-score-badge" id="live-score-hud">SCORE: 0 / 20</span>
     </div>
     <div class="panel-tabs" id="panel-tabs"></div>
   </div>
   <div id="letters-row"></div>
+
+  <!-- LIVE SCORE PANEL -->
+  <div id="live-score-panel">
+    <div class="lsp-label">▸ Live Score Tracker</div>
+    <div class="lsp-row">
+      <div class="lsp-breakdown" id="lsp-breakdown">—</div>
+      <div class="lsp-total">
+        <span class="lsp-total-num" id="lsp-total-num">0</span><span class="lsp-out-of">/ 20</span>
+        <div class="lsp-note">+10 pts for override word</div>
+      </div>
+    </div>
+  </div>
+
   <div id="complete-banner">
     <div class="complete-text">ALL PANELS SECURED</div>
     <p style="font-family:var(--worn);color:var(--text-dim);font-size:0.88rem;margin-bottom:12px;">All seven codes recovered. Proceed to the override sequence.</p>
@@ -311,7 +456,7 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
       <div class="ans-label">Enter Panel Code:</div>
       <div class="ans-row">
         <input class="ans-input" id="a1" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(1)">
-        <button class="sub-btn" onclick="check(1)">SUBMIT</button>
+        <button class="sub-btn" id="btn1" onclick="check(1)">SUBMIT</button>
       </div>
       <div class="feedback" id="f1"></div>
     </div>
@@ -337,7 +482,7 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
       <div class="ans-label">Enter Correction Factor:</div>
       <div class="ans-row">
         <input class="ans-input" id="a2" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(2)">
-        <button class="sub-btn" onclick="check(2)">SUBMIT</button>
+        <button class="sub-btn" id="btn2" onclick="check(2)">SUBMIT</button>
       </div>
       <div class="feedback" id="f2"></div>
     </div>
@@ -363,7 +508,7 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
       <div class="ans-label">Enter Panel Code:</div>
       <div class="ans-row">
         <input class="ans-input" id="a3" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(3)">
-        <button class="sub-btn" onclick="check(3)">SUBMIT</button>
+        <button class="sub-btn" id="btn3" onclick="check(3)">SUBMIT</button>
       </div>
       <div class="feedback" id="f3"></div>
     </div>
@@ -391,7 +536,7 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
       <div class="ans-label">Minimum Loss Value:</div>
       <div class="ans-row">
         <input class="ans-input" id="a4" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(4)">
-        <button class="sub-btn" onclick="check(4)">SUBMIT</button>
+        <button class="sub-btn" id="btn4" onclick="check(4)">SUBMIT</button>
       </div>
       <div class="feedback" id="f4"></div>
     </div>
@@ -419,7 +564,7 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
       <div class="ans-label">Final Slot Number:</div>
       <div class="ans-row">
         <input class="ans-input" id="a5" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(5)">
-        <button class="sub-btn" onclick="check(5)">SUBMIT</button>
+        <button class="sub-btn" id="btn5" onclick="check(5)">SUBMIT</button>
       </div>
       <div class="feedback" id="f5"></div>
     </div>
@@ -441,7 +586,7 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
       <div class="ans-label">Adjusted Oxygen Code (5x):</div>
       <div class="ans-row">
         <input class="ans-input" id="a6" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(6)">
-        <button class="sub-btn" onclick="check(6)">SUBMIT</button>
+        <button class="sub-btn" id="btn6" onclick="check(6)">SUBMIT</button>
       </div>
       <div class="feedback" id="f6"></div>
     </div>
@@ -466,7 +611,7 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
       <div class="ans-label">Adjusted Pulse Value:</div>
       <div class="ans-row">
         <input class="ans-input" id="a7" type="number" placeholder="—" onkeydown="if(event.key==='Enter')check(7)">
-        <button class="sub-btn" onclick="check(7)">SUBMIT</button>
+        <button class="sub-btn" id="btn7" onclick="check(7)">SUBMIT</button>
       </div>
       <div class="feedback" id="f7"></div>
     </div>
@@ -506,7 +651,6 @@ table.matrix td.missing{color:#cc3300;animation:blink-red 1.2s infinite;text-sha
   </div>
   <div class="badge-ok">✓ FACILITY SECURE</div>
 
-  <!-- Score block -->
   <div class="score-block" id="scoreBlock">
     <div class="score-label">Mission Score — Verified</div>
     <div class="score-breakdown" id="scoreBreakdown">
@@ -542,10 +686,8 @@ const HINTS = [
 ];
 
 // ── Hash-based scoring ──
-// Secret is split and assembled at runtime so it's not a single searchable string
 const _k = ['\x66\x63','\x5f\x73','\x65\x73','\x73\x69','\x6f\x6e','\x5f\x76\x31'];
 const _SK = _k.join('');
-// Session token: random per game start, never stored externally
 let _SID = '';
 
 async function _h(msg) {
@@ -553,9 +695,8 @@ async function _h(msg) {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
-// Store hashes of solved events — the ONLY record of what was solved
-let _ph = Array(7).fill(null); // panel hashes
-let _fh = null;                // final word hash
+let _ph = Array(7).fill(null);
+let _fh = null;
 
 async function _recordPanel(n) {
   _ph[n-1] = await _h(_SK + _SID + ':p' + n);
@@ -577,33 +718,74 @@ async function _computeScore() {
   const expectedFinal = await _h(_SK + _SID + ':final');
   const finalOk = (_fh === expectedFinal);
   const finalPts = finalOk ? 10 : 0;
-
-  const rawTotal = panelPts + finalPts; // max 45
+  const rawTotal = panelPts + finalPts;
   const scaled = Math.round((rawTotal / 45) * 20);
-
   return { lines, finalOk, finalPts, rawTotal, scaled };
 }
 
 async function _showScore() {
   const { lines, finalOk, finalPts, scaled } = await _computeScore();
-
   let html = '';
   lines.forEach(l => {
     html += l.label + ' &nbsp;·&nbsp; <span>' + (l.ok ? '+5' : '+0') + '</span><br>';
   });
   html += 'Override word &nbsp;·&nbsp; <span>' + (finalOk ? '+10' : '+0') + '</span>';
-
   document.getElementById('scoreBreakdown').innerHTML = html;
   document.getElementById('scoreFinalNum').textContent = scaled;
 }
 
 // ── Game state ──
-let solved = Array(7).fill(false);
-let tries = Array(7).fill(0);
+let solved  = Array(7).fill(false);
+let locked  = Array(7).fill(false);   // NEW: locked panels
+let tries   = Array(7).fill(0);
 let currentPanel = 1;
 
+// ── Live score (panel-only, out of 35 raw → scaled to 20 without final) ──
+function _liveScaledScore() {
+  // panels only: max raw = 35. Final will add 10 raw later.
+  const panelRaw = solved.filter(Boolean).length * 5;
+  return Math.round((panelRaw / 45) * 20);
+}
+
+function updateLiveScore(bump) {
+  const score = _liveScaledScore();
+
+  // HUD badge
+  const hudBadge = document.getElementById('live-score-hud');
+  hudBadge.textContent = 'SCORE: ' + score + ' / 20';
+  if (bump) {
+    hudBadge.classList.remove('pulse');
+    void hudBadge.offsetWidth;
+    hudBadge.classList.add('pulse');
+  }
+
+  // Live score panel
+  const lspPanel = document.getElementById('live-score-panel');
+  lspPanel.classList.add('on');
+
+  // Build per-panel breakdown
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const n = i + 1;
+    let cls, tag;
+    if (solved[i])      { cls = 'lsp-ok';   tag = '+5 ✓'; }
+    else if (locked[i]) { cls = 'lsp-lock'; tag = '+0 [X]'; }
+    else                { cls = 'lsp-pend'; tag = '+0 …'; }
+    html += '<span class="' + cls + '">P' + n + ' ' + PANEL_NAMES[i] + ' · ' + tag + '</span><br>';
+  }
+  document.getElementById('lsp-breakdown').innerHTML = html;
+
+  // Animate total number
+  const numEl = document.getElementById('lsp-total-num');
+  numEl.textContent = score;
+  if (bump) {
+    numEl.classList.remove('bump');
+    void numEl.offsetWidth;
+    numEl.classList.add('bump');
+  }
+}
+
 function startGame() {
-  // Generate fresh session ID each game
   const arr = new Uint32Array(4);
   crypto.getRandomValues(arr);
   _SID = Array.from(arr).map(n => n.toString(36)).join('');
@@ -619,6 +801,7 @@ function startGame() {
   buildLetters();
   showPanel(1);
   renderMath();
+  updateLiveScore(false);
 }
 
 function buildHUD() {
@@ -650,11 +833,13 @@ function showPanel(n) {
   document.querySelectorAll('#game .panel').forEach(p => p.classList.remove('on'));
   const p = document.getElementById('p' + n);
   if (p) p.classList.add('on');
+
   document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
   const tab = document.getElementById('tab' + n);
   if (tab) tab.classList.add('active');
   currentPanel = n;
 
+  // Show solved banner
   if (solved[n-1]) {
     const existingBanner = p.querySelector('.solved-banner');
     if (!existingBanner) {
@@ -663,28 +848,51 @@ function showPanel(n) {
       banner.textContent = '✓ PANEL SECURED — Letter: ' + LETTERS[n-1];
       p.insertBefore(banner, p.querySelector('.puzzle-box'));
     }
-    const inp = document.getElementById('a' + n);
-    if (inp) inp.disabled = true;
+    document.getElementById('a' + n).disabled = true;
+    document.getElementById('btn' + n).disabled = true;
   }
+
+  // Show locked banner
+  if (locked[n-1] && !solved[n-1]) {
+    const existingLock = p.querySelector('.locked-banner');
+    if (!existingLock) {
+      const banner = document.createElement('div');
+      banner.className = 'locked-banner';
+      banner.innerHTML = '<strong>PANEL LOCKED</strong>Too many failed attempts. This panel is permanently offline. Select another panel.';
+      p.insertBefore(banner, p.querySelector('.puzzle-box'));
+    }
+    document.getElementById('a' + n).disabled = true;
+    document.getElementById('btn' + n).disabled = true;
+    p.classList.add('panel-locked-state');
+  }
+
   setTimeout(renderMath, 80);
 }
 
 function updateHUD() {
   const count = solved.filter(Boolean).length;
+  const lockedCount = locked.filter((l, i) => l && !solved[i]).length;
   document.getElementById('panel-count').textContent = count + ' / 7 panels secured';
-  document.getElementById('pressure-badge').textContent = 'WARNING: ' + (7 - count) + ' panels remaining';
+  document.getElementById('pressure-badge').textContent =
+    'WARNING: ' + (7 - count - lockedCount) + ' panels remaining';
 
   for (let i = 1; i <= 7; i++) {
     const tab = document.getElementById('tab' + i);
-    if (tab && solved[i-1]) {
+    if (!tab) continue;
+    tab.classList.remove('done', 'locked', 'active');
+    if (solved[i-1]) {
       tab.classList.add('done');
-      tab.classList.remove('active');
+    } else if (locked[i-1]) {
+      tab.classList.add('locked');
     }
   }
+  // Re-apply active to current tab
   const activeTab = document.getElementById('tab' + currentPanel);
-  if (activeTab && !solved[currentPanel-1]) activeTab.classList.add('active');
+  if (activeTab) activeTab.classList.add('active');
 
-  if (count === 7) {
+  // All panels either solved or locked → show complete banner
+  const allDone = solved.every((s, i) => s || locked[i]);
+  if (allDone) {
     document.getElementById('complete-banner').classList.add('on');
     document.getElementById('complete-banner').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
@@ -703,25 +911,31 @@ function renderMath() {
 }
 
 function check(n) {
-  if (solved[n-1]) return;
-  const inp = document.getElementById('a' + n);
-  const fb = document.getElementById('f' + n);
-  const val = parseInt(inp.value);
+  if (solved[n-1] || locked[n-1]) return;
+
+  const inp  = document.getElementById('a' + n);
+  const fb   = document.getElementById('f' + n);
+  const btn  = document.getElementById('btn' + n);
+  const val  = parseInt(inp.value);
   tries[n-1]++;
 
   if (val === ANSWERS[n-1]) {
+    // ── CORRECT ──
     solved[n-1] = true;
-    _recordPanel(n); // record hash proof of solving
+    _recordPanel(n);
 
     fb.className = 'feedback ok';
     fb.textContent = '✓ CORRECT — Code ' + val + ' accepted. Letter unlocked: ' + LETTERS[n-1];
     inp.disabled = true;
+    btn.disabled = true;
 
+    // Light up letter box
     const lbox = document.getElementById('lb' + n);
     lbox.innerHTML = LETTERS[n-1] + '<span class="lbox-label">P' + n + '</span>';
+    lbox.classList.remove('locked-box');
     lbox.classList.add('lit');
-    updateHUD();
 
+    // Solved banner
     const p = document.getElementById('p' + n);
     if (!p.querySelector('.solved-banner')) {
       const banner = document.createElement('div');
@@ -729,14 +943,50 @@ function check(n) {
       banner.textContent = '✓ PANEL SECURED — Letter: ' + LETTERS[n-1];
       p.insertBefore(banner, p.querySelector('.puzzle-box'));
     }
+
+    updateHUD();
+    updateLiveScore(true);
+
   } else {
-    fb.className = 'feedback bad';
-    let m = '✗ Incorrect. ';
-    if (tries[n-1] >= 3) m += HINTS[n-1];
-    else m += 'Try again. (Attempt ' + tries[n-1] + ')';
-    fb.textContent = m;
-    inp.value = '';
-    inp.focus();
+    // ── WRONG ──
+    if (tries[n-1] >= 2) {
+      // ── LOCK THE PANEL ──
+      locked[n-1] = true;
+      inp.disabled = true;
+      btn.disabled = true;
+
+      fb.className = 'feedback locked';
+      fb.textContent = 'PANEL LOCKED — 2 failed attempts. Select another panel.';
+
+      // Mark letter box as locked
+      const lbox = document.getElementById('lb' + n);
+      lbox.innerHTML = '✕<span class="lbox-label">P' + n + '</span>';
+      lbox.classList.add('locked-box');
+
+      // Add locked banner to panel
+      const p = document.getElementById('p' + n);
+      p.classList.add('panel-locked-state');
+      if (!p.querySelector('.locked-banner')) {
+        const banner = document.createElement('div');
+        banner.className = 'locked-banner';
+        banner.innerHTML = '<strong>PANEL LOCKED</strong>Too many failed attempts. This panel is permanently offline. Select another panel.';
+        p.insertBefore(banner, p.querySelector('.puzzle-box'));
+      }
+
+      updateHUD();
+      updateLiveScore(false);
+
+    } else {
+      // ── STILL HAS ATTEMPTS ──
+      fb.className = 'feedback bad';
+      let m = '✗ Incorrect. ';
+      if (tries[n-1] >= 1) {
+        m += 'Warning: 1 attempt remaining before lockout. (Attempt ' + tries[n-1] + '/2)';
+      }
+      fb.textContent = m;
+      inp.value = '';
+      inp.focus();
+    }
   }
 }
 
@@ -750,9 +1000,15 @@ function showFinal() {
   fl.innerHTML = '';
   LETTERS.forEach((l, i) => {
     const b = document.createElement('div');
-    b.className = 'lbox lit';
+    // Show X for locked panels, letter for solved
+    if (locked[i] && !solved[i]) {
+      b.className = 'lbox locked-box';
+      b.innerHTML = '✕<span class="lbox-label">P' + (i+1) + '</span>';
+    } else {
+      b.className = 'lbox lit';
+      b.innerHTML = l + '<span class="lbox-label">P' + (i+1) + '</span>';
+    }
     b.style.cursor = 'default';
-    b.innerHTML = l + '<span class="lbox-label">P' + (i+1) + '</span>';
     fl.appendChild(b);
   });
 
@@ -766,18 +1022,17 @@ function showFinal() {
 
 function checkFinal() {
   const inp = document.getElementById('afinal');
-  const fb = document.getElementById('ffinal');
+  const fb  = document.getElementById('ffinal');
   if (!inp || !fb) return;
   const val = inp.value.trim().toUpperCase();
   if (val === 'CONTROL') {
-    _recordFinal(); // record hash proof of final solve
+    _recordFinal();
     fb.className = 'feedback ok';
     fb.textContent = '✓ OVERRIDE WORD ACCEPTED — RELEASING LOCKDOWN...';
     inp.disabled = true;
     setTimeout(() => {
       document.getElementById('final').classList.remove('on');
       document.getElementById('victory').classList.add('on');
-      // Reset score display then compute
       document.getElementById('scoreBreakdown').innerHTML = '<span class="score-pending">Verifying integrity...</span>';
       document.getElementById('scoreFinalNum').textContent = '—';
       setTimeout(_showScore, 400);
@@ -791,16 +1046,21 @@ function checkFinal() {
 }
 
 function resetGame() {
-  solved = Array(7).fill(false);
-  tries = Array(7).fill(0);
+  solved  = Array(7).fill(false);
+  locked  = Array(7).fill(false);
+  tries   = Array(7).fill(0);
   currentPanel = 1;
-  _ph = Array(7).fill(null);
-  _fh = null;
+  _ph  = Array(7).fill(null);
+  _fh  = null;
   _SID = '';
   document.querySelectorAll('.ans-input').forEach(i => { i.disabled = false; i.value = ''; });
+  document.querySelectorAll('.sub-btn').forEach(b => { b.disabled = false; });
   document.querySelectorAll('.feedback').forEach(f => { f.textContent = ''; f.className = 'feedback'; });
   document.querySelectorAll('.solved-banner').forEach(b => b.remove());
+  document.querySelectorAll('.locked-banner').forEach(b => b.remove());
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('panel-locked-state'));
   document.getElementById('complete-banner').classList.remove('on');
+  document.getElementById('live-score-panel').classList.remove('on');
   document.getElementById('victory').classList.remove('on');
   document.getElementById('final').classList.remove('on');
   document.getElementById('game').classList.remove('on');
